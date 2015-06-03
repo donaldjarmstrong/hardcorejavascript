@@ -1,0 +1,41 @@
+<html>
+<head>
+    <script src="http://code.jquery.com/jquery-2.1.4.js" type="application/javascript"></script>
+
+    <script src="http://looprecur.com/hostedjs/pointfree.browser.js"></script>
+    <script src="http://looprecur.com/hostedjs/io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.60/Bacon.js"
+            type="application/javascript"></script>
+</head>
+<body>
+<label for="searchInput">Search</label>
+<input type="text" id="searchInput"/>
+<button id="searchButton">Search</button>
+<script>
+    function setup() {
+        var box = document.getElementById('searchButton');
+        box.onclick = function () {
+            console.log('clicked');
+        };
+
+        var P = PointFree;
+        var IO = P.IO.IO;
+        var runIO = P.IO.runIO;
+        P.IO.extendFn();
+
+        var buttonStream = $("#searchButton").asEventStream("click");
+        var getText = function(x){ return document.querySelector(x).value }.toIO();
+        var upper = function (x) { return x.toUpperCase() };
+
+        var ex = P.compose(buttonStream);
+        buttonStream.subscribe(function (e) {
+            $("#searchInput").val("text")
+        });
+
+        runIO(ex);
+    }
+
+    $(document).ready(setup);
+</script>
+</body>
+</html>
